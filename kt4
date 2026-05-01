@@ -1,0 +1,97 @@
+class User:
+    count = 0  # атрибут класса
+
+    def __init__(self, name: str, login: str, password: str, grade: int):
+        self._name = name
+        self._login = login
+        self._password = password
+        self._grade = grade
+        User.count += 1
+
+    # name: чтение и запись
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        self._name = value
+
+    # login: только чтение
+    @property
+    def login(self):
+        return self._login
+
+    @login.setter
+    def login(self, value):
+        print("Невозможно изменить логин!")
+
+    # password: только запись
+    @property
+    def password(self):
+        return "********"
+
+    @password.setter
+    def password(self, value):
+        self._password = value
+
+    # grade: полностью скрыт
+    @property
+    def grade(self):
+        print("Неизвестное свойство grade")
+
+    @grade.setter
+    def grade(self, value):
+        print("Неизвестное свойство grade")
+
+    # вывод информации
+    def show_info(self):
+        print(f"Name: {self._name}, Login: {self._login}")
+
+    # сравнение по grade
+    def eq(self, other):
+        return self._grade == other._grade
+
+    def lt(self, other):
+        return self._grade < other._grade
+
+    def gt(self, other):
+        return self._grade > other._grade
+
+    # перегрузка операторов
+    def __eq__(self, other):
+        return self.eq(other)
+
+    def __lt__(self, other):
+        return self.lt(other)
+
+    def __gt__(self, other):
+        return self.gt(other)
+
+
+class SuperUser(User):
+    count = 0
+
+    def __init__(self, name, login, password, role, grade):
+        super().__init__(name, login, password, grade)
+        self._role = role
+        SuperUser.count += 1
+
+    # role: чтение и запись
+    @property
+    def role(self):
+        return self._role
+
+    @role.setter
+    def role(self, value):
+        self._role = value
+
+    # вывод информации
+    def show_info(self):
+        print(f"Name: {self._name}, Login: {self._login}, Role: {self._role}")
+if __name__ == "__main__":
+    user1 = User('Paul McCartney', 'paul', '1234', 3)
+    admin = SuperUser('John Lennon', 'john', '0000', 'admin', 5)
+
+    user1.show_info()
+    admin.show_info()
