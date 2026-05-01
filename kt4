@@ -1,14 +1,15 @@
 class User:
-    count = 0  # атрибут класса
+    count = 0
 
     def __init__(self, name: str, login: str, password: str, grade: int):
         self._name = name
         self._login = login
         self._password = password
         self._grade = grade
-        User.count += 1
 
-    # name: чтение и запись
+        if type(self) is User:
+            User.count += 1
+
     @property
     def name(self):
         return self._name
@@ -17,7 +18,6 @@ class User:
     def name(self, value):
         self._name = value
 
-    # login: только чтение
     @property
     def login(self):
         return self._login
@@ -26,7 +26,6 @@ class User:
     def login(self, value):
         print("Невозможно изменить логин!")
 
-    # password: только запись
     @property
     def password(self):
         return "********"
@@ -35,49 +34,38 @@ class User:
     def password(self, value):
         self._password = value
 
-    # grade: полностью скрыт
     @property
     def grade(self):
-        print("Неизвестное свойство grade")
+        return "Неизвестное свойство grade"
 
     @grade.setter
     def grade(self, value):
         print("Неизвестное свойство grade")
 
-    # вывод информации
     def show_info(self):
-        print(f"Name: {self._name}, Login: {self._login}")
+        print(f"Name: {self.name}, Login: {self.login}")
 
-    # сравнение по grade
-    def eq(self, other):
+    def showInfo(self):
+        self.show_info()
+
+    def __eq__(self, other):
         return self._grade == other._grade
 
-    def lt(self, other):
+    def __lt__(self, other):
         return self._grade < other._grade
 
-    def gt(self, other):
-        return self._grade > other._grade
-
-    # перегрузка операторов
-    def __eq__(self, other):
-        return self.eq(other)
-
-    def __lt__(self, other):
-        return self.lt(other)
-
     def __gt__(self, other):
-        return self.gt(other)
+        return self._grade > other._grade
 
 
 class SuperUser(User):
     count = 0
 
-    def __init__(self, name, login, password, role, grade):
+    def __init__(self, name: str, login: str, password: str, role: str, grade: int):
         super().__init__(name, login, password, grade)
         self._role = role
         SuperUser.count += 1
 
-    # role: чтение и запись
     @property
     def role(self):
         return self._role
@@ -86,12 +74,39 @@ class SuperUser(User):
     def role(self, value):
         self._role = value
 
-    # вывод информации
     def show_info(self):
-        print(f"Name: {self._name}, Login: {self._login}, Role: {self._role}")
-if __name__ == "__main__":
-    user1 = User('Paul McCartney', 'paul', '1234', 3)
-    admin = SuperUser('John Lennon', 'john', '0000', 'admin', 5)
+        print(f"Name: {self.name}, Login: {self.login}, Role: {self.role}")
 
-    user1.show_info()
-    admin.show_info()
+    def showInfo(self):
+        self.show_info()
+
+
+user1 = User("Paul McCartney", "paul", "1234", 3)
+user2 = User("George Harrison", "george", "5678", 2)
+user3 = User("Richard Starkey", "ringo", "8523", 3)
+admin = SuperUser("John Lennon", "john", "0000", "admin", 5)
+
+user1.show_info()
+admin.show_info()
+
+users = User.count
+admins = SuperUser.count
+
+print(f"Всего обычных пользователей: {users}")
+print(f"Всего супер-пользователей: {admins}")
+
+print(user1 < user2)
+print(admin > user3)
+print(user1 == user3)
+
+user3.name = "Ringo Starr"
+user1.password = "Pa$$w0rd"
+
+print(user3.name)
+print(user2.password)
+print(user2.login)
+
+user2.login = "geo"
+
+print(user1.grade)
+admin.grade = 10
